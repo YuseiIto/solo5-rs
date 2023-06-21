@@ -1,14 +1,19 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+#![no_std]
+#![feature(alloc_error_handler)]
+#![feature(pointer_byte_offsets)]
+#![feature(strict_provenance)]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+extern crate alloc;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+#[macro_use]
+pub mod console;
+pub mod block;
+pub mod lang;
+pub mod tlsf;
+pub use block::BlockDevice;
+mod result;
+pub use result::{Solo5Error, Solo5Result};
+pub mod time;
+
+#[cfg(feature = "net")]
+pub mod net;
