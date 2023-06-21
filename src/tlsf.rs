@@ -9,10 +9,13 @@ type SecondLevelBitmapType = u16; // Ceil(SLI_POW2/8) bytes
 const SECOND_LEVEL_BITMAP_LENGTH: usize = FLI_MAX;
 
 use core::cell::Cell;
-use core::ptr::{self, null};
+use core::ptr;
+
+#[cfg(feature = "tlsf_dump")]
+use crate::console::put_num;
 
 mod block;
-use crate::console::{put_num, puts};
+use crate::console::puts;
 use block::Block;
 use core::cmp::max;
 pub struct TLSF {

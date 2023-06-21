@@ -1,9 +1,10 @@
+use alloc::string::String;
 use solo5_sys::{
-    solo5_result_t, solo5_result_t_SOLO5_R_AGAIN, solo5_result_t_SOLO5_R_EINVAL,
-    solo5_result_t_SOLO5_R_EUNSPEC, solo5_result_t_SOLO5_R_OK,
+    solo5_result_t, solo5_result_t_SOLO5_R_AGAIN as SOLO5_R_AGAIN,
+    solo5_result_t_SOLO5_R_EINVAL as SOLO5_R_EINVAL,
+    solo5_result_t_SOLO5_R_EUNSPEC as SOLO5_R_EUNSPEC, solo5_result_t_SOLO5_R_OK as SOLO5_R_OK,
 };
 use thiserror_no_std::Error;
-use alloc::string::String;
 
 #[derive(Debug, Error, Clone, PartialEq, Eq, Hash)]
 pub enum Solo5Error {
@@ -14,18 +15,18 @@ pub enum Solo5Error {
     #[error("Unspecified error")]
     Unspecified,
     #[error("Validation Error. Reason: {0}")]
-    ValidationError(String)
+    ValidationError(String),
 }
 
 impl From<solo5_result_t> for Solo5Error {
     fn from(raw_res: solo5_result_t) -> Self {
         match raw_res {
-            solo5_result_t_SOLO5_R_OK => {
+            SOLO5_R_OK => {
                 panic!("SOLO5_R_OK can't be converted to Solo5Error since it's not an error")
             }
-            solo5_result_t_SOLO5_R_AGAIN => Self::Again,
-            solo5_result_t_SOLO5_R_EINVAL => Self::InvalidArgs,
-            solo5_result_t_SOLO5_R_EUNSPEC => Self::Unspecified,
+            SOLO5_R_AGAIN => Self::Again,
+            SOLO5_R_EINVAL => Self::InvalidArgs,
+            SOLO5_R_EUNSPEC => Self::Unspecified,
             e => panic!("Unknown solo5_result_t error code given. Value:{}", e),
         }
     }
@@ -37,7 +38,7 @@ pub struct Solo5Result<T>(Result<T, Solo5Error>);
 impl<T> Solo5Result<T> {
     pub fn from(value: solo5_result_t, success: T) -> Result<T, Solo5Error> {
         match value {
-            solo5_result_t_SOLO5_R_OK => Ok(success),
+            SOLO5_R_OK => Ok(success),
             _ => Err(Solo5Error::from(value)),
         }
     }

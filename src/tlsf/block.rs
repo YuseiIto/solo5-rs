@@ -1,5 +1,6 @@
 use core::cell::Cell;
 
+#[cfg(feature = "tlsf_dump")]
 use crate::console::{put_num, puts};
 
 pub struct Block {

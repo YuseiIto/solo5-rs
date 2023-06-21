@@ -1,9 +1,9 @@
+use crate::result::Solo5Error;
 use alloc::{
     string::{String, ToString},
     vec::Vec,
 };
 use solo5_sys::solo5_block_info;
-use crate::result::Solo5Error;
 
 #[derive(Debug, Clone)]
 pub struct BlockDevice {
@@ -107,5 +107,9 @@ impl BlockDevice {
 
     pub fn block_size(&self) -> usize {
         self.info.block_size as usize
+    }
+
+    pub fn name(&self) -> String {
+        self.name.to_string()
     }
 }
