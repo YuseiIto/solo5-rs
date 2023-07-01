@@ -1,30 +1,15 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, AttributeArgs, ItemFn, Lit, NestedMeta};
+use syn::{parse_macro_input, ItemFn};
 
 #[proc_macro_attribute]
-pub fn main(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let args = parse_macro_input!(attr as AttributeArgs);
-
-    let mut tlsf_init = quote! {};
-    // FIXME: これは引数ではなくてcfgで見た方がいいかも
-    for a in args {
-        match a {
-            NestedMeta::Lit(Lit::Str(l)) => {
-                println!("{}", l.value().to_string());
-                if l.value().eq("alloc") {
-                    tlsf_init = quote!(
-                    solo5_rs::tlsf::GLOBAL.init(start.heap_start, start.heap_size as usize);
-                        )
-                }
-            }
-            _ => {
-                return TokenStream::from(
-                    quote! {compile_error!("Invalid attribute is specified for `solo5_main`");},
-                )
-            }
-        }
-    }
+pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
+    #[cfg(feature = "alloc")]
+    let tlsf_init = quote! {
+    solo5_rs::tlsf::GLOBAL.init(start.heap_start, start.heap_size as usize);
+    };
+    #[cfg(not(feature = "alloc"))]
+    let tlsf_init = quote! {};
 
     let body = item.clone();
     let body = parse_macro_input!(body as ItemFn);

@@ -4,7 +4,7 @@
 
 use solo5_rs::consoleln;
 
-#[solo5_rs::main(alloc)]
+#[solo5_rs::main]
 fn main() {
     consoleln!("Hello,World");
 }

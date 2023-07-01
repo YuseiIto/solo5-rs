@@ -11,3 +11,6 @@ proc-macro = true
 [dependencies]
 quote = "1.0.29"
 syn = { version = "1.0.86", features = ["full"] }
+
+[features]
+alloc=[]
