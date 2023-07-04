@@ -2,7 +2,12 @@
 use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::quote;
-use syn::{parse_macro_input, FnArg, Ident, ItemFn, PatType, Type};
+use syn::{parse_macro_input, FnArg, Ident, ItemFn, PatType, ReturnType, Type, TypePath};
+
+/* NOTE:
+ * This is one of the cheap wrapper macro and is not considered to be a good interface,
+ * but is adopted because I cannot come up with a better way to do it at the moment.
+*/
 
 #[proc_macro_attribute]
 pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
@@ -28,9 +33,9 @@ pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     attrs: _,
                     pat: _,
                     colon_token: _,
-                    ty: box Type::Path(ty),
+                    ty: box Type::Path(TypePath { qself: _, path }),
                 }) => {
-                    if ty.path.get_ident().unwrap().to_owned()
+                    if path.get_ident().unwrap().to_owned()
                         == Ident::new("Solo5StartInfo", Span::call_site())
                     {
                         quote! {
@@ -65,12 +70,21 @@ pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
         }
     };
 
+    let call_main = match body.sig.output.clone() {
+        ReturnType::Default => quote! {
+        #ident(#solo5_main_arg);
+                return 0;
+            },
+        ReturnType::Type(_, _) => quote! {
+        u64::from(#ident(#solo5_main_arg))
+            },
+    };
+
     let entry = quote! {
     #[no_mangle]
     pub extern "C" fn solo5_app_main(start: &solo5_sys::solo5_start_info) -> u64 {
         #tlsf_init
-        #ident(#solo5_main_arg);
-        return 0;
+        #call_main
     }
         };
 
