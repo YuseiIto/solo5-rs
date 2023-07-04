@@ -6,6 +6,3 @@ pub mod transport;
 
 /// The essential types and utiliy functions are defined at commmon.
 pub mod common;
-
-// External smoltcp protocol implementation glue
-pub mod smoltcp;
