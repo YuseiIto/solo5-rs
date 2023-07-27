@@ -46,25 +46,23 @@ impl Solo5NetInterfaceDesc {
     pub fn recv(&mut self, buffer: &mut [u8]) -> Result<usize, Solo5Error> {
         let len = buffer.len();
 
-        // FIXME: The duration 1us was specified without much thought, so there is room for reconsideration.
-        if !self.lower.wait_until_timeout(1) {
-            return Ok(0);
+        match self.lower.read(len, buffer) {
+            Ok(l) => Ok(l),
+            Err(Solo5Error::Again) => Ok(0),
+            Err(e) => Err(e),
         }
-
-        let read = match self.lower.read(len) {
-            Ok(b) => b,
-            Err(e) => return Err(e),
-        };
-
-        for i in 0..read.len() {
-            buffer[i] = read[i];
-        }
-        Ok(read.len())
     }
 
     /// Send a single message onto the tap from the buffer.
     pub fn send(&mut self, buffer: &[u8]) -> Result<usize, Solo5Error> {
         consoleln!("Sending...");
+
+        // FIXME: The duration 1us was specified without much thought, so there is room for reconsideration.
+
+        if !self.lower.wait_until_timeout(10) {
+            return Ok(0);
+        }
+
         match self.lower.write(buffer) {
             Ok(_) => Ok(buffer.len()),
             Err(e) => Err(e),
@@ -116,6 +114,7 @@ impl<C: PayloadMut> Solo5NetInterface<C> {
         self.recycle();
         let result = self.inner.recv(self.buffer.payload_mut().as_mut_slice());
         match result {
+            Ok(0) => Received::Ok,
             Ok(len) => {
                 self.buffer.set_len_unchecked(len);
                 Received::Ok
@@ -194,6 +193,6 @@ impl<C: PayloadMut> Device for Solo5NetInterface<C> {
 }
 
 fn io_error_to_layer(_: &Solo5Error) -> layer::Error {
-    // FIXME: not the best feed back.
+    // FIXME: not the best fallback.
     layer::Error::Illegal
 }

@@ -1,7 +1,5 @@
 use super::MacAddr;
-use crate::{time::clock_monolithic_ns, Solo5Error, Solo5Result};
-use alloc::alloc::{alloc_zeroed,dealloc, Layout};
-use alloc::vec::Vec;
+use crate::{time::clock_monotonic_ns, Solo5Error, Solo5Result};
 use solo5_sys::{
     solo5_net_acquire, solo5_net_info, solo5_net_read, solo5_net_write, solo5_yield, SOLO5_NET_ALEN,
 };
@@ -35,7 +33,7 @@ impl NetworkDevice {
         };
 
         let res = Self {
-            handle: handle,
+            handle,
             mac_addr: MacAddr::from(&info.mac_address),
             mtu: info.mtu as usize,
         };
@@ -44,26 +42,17 @@ impl NetworkDevice {
     }
 
     /// Read specified length of bytes from this devide
-    pub fn read(&self, max_size: usize) -> Result<Vec<u8>, Solo5Error> {
-        let layout = Layout::from_size_align(max_size, 1)
-            .expect("Rounded size up to multiple of alignment overflowed from isize");
-        let buf = unsafe { alloc_zeroed(layout) };
+    pub fn read(&self, max_size: usize, buf: &mut [u8]) -> Result<usize, Solo5Error> {
         let mut read_size = 0;
         let res = unsafe {
             solo5_net_read(
                 self.handle,
-                buf,
+                buf.as_mut_ptr(),
                 max_size as u64,
                 core::ptr::addr_of_mut!(read_size),
             )
         };
-
-        let mut buf_vec = Vec::with_capacity(read_size as usize);
-        for offset in 0..read_size as usize {
-            buf_vec.push(unsafe { buf.add(offset).read() });
-        }
-        unsafe{dealloc(buf,layout);}
-        Solo5Result::from(res, buf_vec).into()
+        Solo5Result::from(res, read_size as usize).into()
     }
 
     pub fn write(&self, bytes: &[u8]) -> Result<(), Solo5Error> {
@@ -74,7 +63,7 @@ impl NetworkDevice {
 
     pub fn wait_until_timeout(&self, timeout_ns: u64) -> bool {
         let mut handles = 0;
-        let deadline = clock_monolithic_ns() + timeout_ns;
+        let deadline = clock_monotonic_ns() + timeout_ns;
         unsafe {
             solo5_yield(deadline, core::ptr::addr_of_mut!(handles));
         }
