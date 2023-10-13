@@ -21,11 +21,21 @@ fn main(_start: Solo5StartInfo) -> u64 {
 
     let mut interface =
         Solo5NetInterface::new(&name, vec![0; 1 << 14]).expect("Couldn't initialize interface");
-    let host = Cidr::new(IpV4Address([10, 0, 0, 2]), 24);
+
+    /*
+        let host = Cidr::new(IpV4Address([10, 0, 0, 2]), 24);
+        let hostmac = interface.mac_addr();
+
+        let gateway = Cidr::new(IpV4Address([10, 0, 0, 1]), 24);
+        let gatemac = Address::from_bytes(&[0x7e, 0xb5, 0xa9, 0x1e, 0x4a, 0x56]);
+    */
+
+    let host = Cidr::new(IpV4Address([10, 0, 0, 1]), 24);
     let hostmac = interface.mac_addr();
 
-    let gateway = Cidr::new(IpV4Address([10, 0, 0, 1]), 24);
-    let gatemac = Address::from_bytes(&[0x7e, 0xb5, 0xa9, 0x1e, 0x4a, 0x56]);
+    let gateway = Cidr::new(IpV4Address([192, 168, 11, 1]), 24);
+    //let gatemac = Address::from_bytes(&[0x7e, 0xb5, 0xa9, 0x1e, 0x4a, 0x56]);
+    let gatemac = Address::from_bytes(&[0x74, 0x03, 0xbd, 0x30, 0x59, 0xf3]);
 
     let mut eth = eth::Endpoint::new(hostmac);
 

@@ -4,7 +4,7 @@ use arp::ArpPacket;
 use ip::IpPacket;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-enum InternetProtocol {
+pub enum InternetProtocol {
     Ip(IpPacket),
     Arp(ArpPacket),
 }

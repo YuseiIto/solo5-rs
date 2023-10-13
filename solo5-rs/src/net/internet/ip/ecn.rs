@@ -21,13 +21,13 @@ impl Into<u8> for Ecn {
 }
 
 impl Ecn {
-    fn ect(&self) -> bool {
+    pub fn ect(&self) -> bool {
         self.0.is_some()
     }
 
     /// Returns the content of CE bit if ect==true.
     /// Otherwise it panics.
-    fn ce(&self) -> bool {
+    pub fn ce(&self) -> bool {
         self.0.unwrap()
     }
 }
