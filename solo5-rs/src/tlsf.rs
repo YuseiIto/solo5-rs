@@ -93,7 +93,7 @@ impl TLSF {
         self.heads[f][s].get()
     }
 
-    fn reserve_exisiting_block(&self, f: usize, s: usize) -> Option<*mut Block> {
+    fn reserve_exisiting_block(&self, f: usize, s: usize, align: usize) -> Option<*mut Block> {
         if (self.first_level_bitmap() & (1 << f) == 0)
             || (self.second_level_bitmap(f) & (1 << s) == 0)
         {

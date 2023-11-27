@@ -41,7 +41,7 @@ impl Device for Solo5NetInterface {
     }
 
     fn receive(&mut self, _timestamp: Instant) -> Option<(Self::RxToken<'_>, Self::TxToken<'_>)> {
-        let mut lower = self.lower.borrow_mut();
+        let lower = self.lower.borrow_mut();
         let mut buffer = vec![0; self.mtu];
         match lower.read(self.mtu as usize, &mut buffer[..]) {
             Ok(size) => {
