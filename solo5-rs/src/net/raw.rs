@@ -1,5 +1,6 @@
-use super::MacAddr;
+mod mac_addr;
 use crate::{time::clock_monotonic_ns, Solo5Error, Solo5Result};
+use mac_addr::MacAddr;
 use solo5_sys::{
     solo5_net_acquire, solo5_net_info, solo5_net_read, solo5_net_write, solo5_yield, SOLO5_NET_ALEN,
 };
@@ -72,7 +73,7 @@ impl NetworkDevice {
 
     /// Returns MTU of this data link.
     pub fn mtu(&self) -> u64 {
-        self.handle
+        self.mtu as u64
     }
 
     /// Returns assigned MAC Address of this device.
