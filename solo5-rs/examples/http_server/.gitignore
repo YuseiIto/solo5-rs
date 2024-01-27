@@ -2,4 +2,3 @@
 *.hvt
 *.o
 manifest.c
-Cargo.lock
