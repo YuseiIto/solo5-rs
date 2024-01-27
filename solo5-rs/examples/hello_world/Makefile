@@ -10,7 +10,7 @@ kernel: manifest.o $(LIB_KERNEL) lib.o
 	$(LD) -z solo5-abi=hvt -o $(KERNEL_PATH) $(LIB_KERNEL) manifest.o ~/solo5/lib.o
 
 $(LIB_KERNEL): src/**.rs src/*.rs Cargo.toml Cargo.lock
-	cargo +nightly build --target x86_64-unknown-none
+	cargo +nightly build -Zbuild-std --target x86_64-unknown-none
 
 manifest.c: manifest.json
 	$(ELFTOOL) gen-manifest manifest.json manifest.c
