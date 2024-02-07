@@ -6,6 +6,7 @@ use super::raw::NetworkDevice;
 use crate::Solo5Error;
 use smoltcp::phy::{self, Device, DeviceCapabilities, Medium};
 use smoltcp::time::Instant;
+use smoltcp::wire::EthernetAddress;
 
 /// A virtual tap interface which is mapped to solo5 network interface.
 
@@ -26,6 +27,12 @@ impl Solo5NetInterface {
             mtu,
             medium: Medium::Ethernet,
         })
+    }
+
+    pub fn mac_addr(&self) -> EthernetAddress {
+        let lower = self.lower.borrow();
+        let mac = lower.mac_addr();
+        EthernetAddress(mac.into())
     }
 }
 
@@ -88,7 +95,7 @@ impl phy::TxToken for TxToken {
     where
         F: FnOnce(&mut [u8]) -> R,
     {
-        let mut lower = self.lower.borrow_mut();
+        let lower = self.lower.borrow_mut();
         let mut buffer = vec![0; len];
         let result = f(&mut buffer);
         match lower.write(&buffer[..]) {
