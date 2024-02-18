@@ -11,6 +11,9 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solo5-rs-macros
     steps:
     - name: Checkout Crate
       uses: actions/checkout@v3
