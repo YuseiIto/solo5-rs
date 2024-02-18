@@ -2,11 +2,14 @@ ifndef LIBNAME
 	$(error Set LIBNAME before importing Common.mk)
 endif
 
+ifndef HVT_ARGS
+	HVT_ARGS:= --mem=1024
+endif
+
 CC:= x86_64-solo5-none-static-cc
 LD:= x86_64-solo5-none-static-ld
 HVT:= solo5-hvt
 ELFTOOL := solo5-elftool
-LIBNAME := do_nothing
 KERNEL_PATH := kernel.hvt
 CARGO := cargo +nightly
 CARGO_FLAGS := -Zbuild-std --target x86_64-unknown-none
@@ -34,7 +37,7 @@ build:
 
 .PHONY: run
 run: ${BLOCK}
-	$(HVT) --mem=1024 -- $(KERNEL_PATH)
+	$(HVT) $(HVT_ARGS) -- $(KERNEL_PATH) $(RUN_ARGS)
 
 .PHONY: dev
 dev: kernel run
