@@ -32,8 +32,7 @@ lib.o:
 	$(CC) -c ~/solo5/bindings/lib.c
 
 .PHONY: build # yet another alias for 'make kernel'
-build:
-	$(MAKE) kernel
+build: kernel
 
 .PHONY: run
 run: ${BLOCK}
