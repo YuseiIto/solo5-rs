@@ -1,6 +1,7 @@
 use crate::result::Solo5Error;
 use alloc::{
     string::{String, ToString},
+    vec,
     vec::Vec,
 };
 use solo5_sys::solo5_block_info;
