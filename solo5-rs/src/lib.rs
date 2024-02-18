@@ -22,6 +22,7 @@ pub use solo5_rs_macros::main;
 mod misc;
 pub use misc::*;
 
+#[cfg(not(test))]
 #[global_allocator]
 pub static ALLOCATOR: LockedHeap = LockedHeap::empty();
 
