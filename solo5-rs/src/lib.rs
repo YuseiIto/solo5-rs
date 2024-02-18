@@ -8,7 +8,11 @@ extern crate alloc;
 #[macro_use]
 pub mod console;
 pub mod block;
+
+#[cfg(not(test))]
+// Language items causes duplicate definition conflict for test since test depends on std
 pub mod lang;
+
 // pub mod tlsf;
 pub use block::BlockDevice;
 mod result;
