@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "solo5-rs",
+    "solo5-rs-macros"
+]
