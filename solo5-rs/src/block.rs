@@ -23,7 +23,7 @@ impl BlockDevice {
         let name_c = alloc::ffi::CString::new(name).unwrap();
         let acquire_result = unsafe {
             solo5_sys::solo5_block_acquire(
-                name_c.as_ptr() as *const i8,
+                name_c.as_ptr(),
                 core::ptr::addr_of_mut!(handle),
                 core::ptr::addr_of_mut!(info),
             )
@@ -75,8 +75,7 @@ impl BlockDevice {
     }
 
     pub fn read(&self, pos_offset: usize, size: usize) -> Result<Vec<u8>, Solo5Error> {
-        let mut buf = Vec::with_capacity(size);
-        buf.resize(size, 0);
+        let mut buf = vec![0; size];
 
         let pos_offset = pos_offset as u64;
         if pos_offset % self.info.block_size != 0 {
@@ -92,9 +91,8 @@ impl BlockDevice {
             ));
         }
 
-        let read_result = unsafe {
-            solo5_sys::solo5_block_read(self.handle, pos_offset, buf.as_mut_ptr() as *mut u8, size)
-        };
+        let read_result =
+            unsafe { solo5_sys::solo5_block_read(self.handle, pos_offset, buf.as_mut_ptr(), size) };
 
         match read_result {
             0 => Ok(buf),
