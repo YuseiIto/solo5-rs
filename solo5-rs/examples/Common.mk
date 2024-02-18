@@ -42,5 +42,5 @@ dev: kernel run
 .PHONY: clean
 clean:
 	cargo clean
-	- rm manifest.c manifest.o $(KERNEL_PATH) lib.o
+	- rm -f manifest.c manifest.o $(KERNEL_PATH) lib.o
 	
