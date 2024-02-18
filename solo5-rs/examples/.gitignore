@@ -1,0 +1,4 @@
+*/**/target
+*/**/kernel.hvt
+*/**/*.o
+*/**/manifest.c
