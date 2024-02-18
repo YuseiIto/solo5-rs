@@ -1,4 +1,4 @@
-name: Rust lint & test
+name: Rust lint & test (solo5-rs-macros)
 
 on:
   push:
