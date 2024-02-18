@@ -2,7 +2,7 @@ CC:= x86_64-solo5-none-static-cc
 LD:= x86_64-solo5-none-static-ld
 HVT:= solo5-hvt
 ELFTOOL := solo5-elftool
-LIBNAME := do_nothing
+LIBNAME := http_client
 LIB_KERNEL := target/x86_64-unknown-none/debug/lib$(LIBNAME).a
 KERNEL_PATH := kernel.hvt
 
@@ -26,9 +26,23 @@ lib.o:
 build:
 	$(MAKE) kernel
 
+TAP_DEV := tap0
+
+.PHONY: init
+init: 
+	sudo ip tuntap add dev $(TAP_DEV) mode tap
+	sudo ip link set $(TAP_DEV) up
+	sudo ip addr add 10.0.0.1/24 dev $(TAP_DEV)
+	sudo ip route add dev $(TAP_DEV) 10.0.0.1
+
+.PHONY: deinit
+deinit:
+	sudo ip addr del 10.0.0.1/24 dev $(TAP_DEV)
+	sudo ip tuntap del dev $(TAP_DEV) mode tap
+
 .PHONY: run
-run: ${BLOCK}
-	$(HVT) --mem=1024 -- $(KERNEL_PATH)
+run: 
+	$(HVT) --mem=1024 --net:net0=$(TAP_DEV) -- $(KERNEL_PATH)
 
 .PHONY: dev
 dev: kernel run

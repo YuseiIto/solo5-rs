@@ -13,8 +13,12 @@ use syn::{parse_macro_input, FnArg, Ident, ItemFn, PatType, ReturnType, Type, Ty
 pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
     #[cfg(feature = "alloc")]
     let tlsf_init = quote! {
-    solo5_rs::tlsf::GLOBAL.init(start.heap_start, start.heap_size as usize);
+     // solo5_rs::tlsf::GLOBAL.init(start.heap_start, start.heap_size as usize);
+      unsafe {
+        solo5_rs::ALLOCATOR.lock().init(start.heap_start as *mut u8, start.heap_size as usize);
+    }
     };
+
     #[cfg(not(feature = "alloc"))]
     let tlsf_init = quote! {};
 

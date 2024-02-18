@@ -1,5 +1,5 @@
 [package]
-name = "ping" 
+name = "http_server" 
 version = "0.1.0"
 edition = "2021"
 
@@ -10,7 +10,7 @@ crate-type = ["staticlib"]
 [dependencies]
 solo5-sys = "0.1.0"
 solo5-rs = {path ="../..",features=["net"]}
-ethox = "0.0.2"
+smoltcp = { version = "0.10.0", default-features = false, features = ["alloc","medium-ethernet","proto-ipv4","socket-tcp","proto-ipv4"] }
 
 [profile.dev]
 panic = "abort"

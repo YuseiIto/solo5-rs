@@ -2,7 +2,7 @@ CC:= x86_64-solo5-none-static-cc
 LD:= x86_64-solo5-none-static-ld
 HVT:= solo5-hvt
 ELFTOOL := solo5-elftool
-LIBNAME := do_nothing
+LIBNAME := tcp
 LIB_KERNEL := target/x86_64-unknown-none/debug/lib$(LIBNAME).a
 KERNEL_PATH := kernel.hvt
 
@@ -10,7 +10,7 @@ kernel: manifest.o $(LIB_KERNEL) lib.o
 	$(LD) -z solo5-abi=hvt -o $(KERNEL_PATH) $(LIB_KERNEL) manifest.o ~/solo5/lib.o
 
 $(LIB_KERNEL): src/**.rs src/*.rs Cargo.toml Cargo.lock
-	cargo +nightly build -Zbuild-std --target x86_64-unknown-none
+	cargo +nightly build --target x86_64-unknown-none
 
 manifest.c: manifest.json
 	$(ELFTOOL) gen-manifest manifest.json manifest.c
@@ -26,9 +26,21 @@ lib.o:
 build:
 	$(MAKE) kernel
 
+.PHONY: init
+init: 
+	sudo ip tuntap add dev net0_tap mode tap
+	sudo ip link set net0_tap up
+	sudo ip addr add 10.0.0.1/24 dev net0_tap 
+	sudo ip route add dev net0_tap 10.0.0.1
+
+.PHONY: deinit
+deinit:
+	sudo ip addr del 10.0.0.1/24 dev net0_tap 
+	sudo ip tuntap del dev net0_tap mode tap
+
 .PHONY: run
 run: ${BLOCK}
-	$(HVT) --mem=1024 -- $(KERNEL_PATH)
+	$(HVT) --mem=1024 --net:net0=net0_tap -- $(KERNEL_PATH)
 
 .PHONY: dev
 dev: kernel run
