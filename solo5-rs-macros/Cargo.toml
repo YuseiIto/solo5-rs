@@ -2,6 +2,12 @@
 name = "solo5-rs-macros"
 version = "0.1.0"
 edition = "2021"
+authors = ["Yusei Ito <me@yuseiito.com>"]
+license = "MIT OR Apache-2.0"
+keywords = ["solo5", "unikernel","no-std","macros"]
+repository = "https://github.com/yuseiIto/solo5-rs"
+categories = ["no-std"]
+description = "Provides proceedual macros in solo5-rs."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -7,7 +7,7 @@ license = "MIT OR Apache-2.0"
 keywords = ["solo5", "unikernel","no-std"]
 repository = "https://github.com/yuseiIto/solo5-rs"
 categories = ["api-bindings", "memory-management","network-programming","no-std","virtualization"]
-description = "This library provides a convenient abstraction and utilities for Solo5 based unikernels."
+description = "A convenient abstraction and utilities for Solo5 based unikernels."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,7 +15,6 @@ description = "This library provides a convenient abstraction and utilities for 
 thiserror-no-std = "2.0.2"
 solo5-sys="0.1.0"
 solo5-rs-macros={path="../solo5-rs-macros",features=["alloc"]}
-ethox = "0.0.2"
 linked_list_allocator = "0.10.5"
 smoltcp = { version = "0.10.0", default-features = false, features = ["alloc","medium-ethernet","proto-ipv4","socket-tcp","proto-ipv4"] }
 
