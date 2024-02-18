@@ -32,6 +32,9 @@ jobs:
       run: cargo clippy -- -D warnings
 
   test:
+    defaults:
+      run:
+        working-directory: solo5-rs-macros
     runs-on: ubuntu-latest
     steps:
     - name: Checkout Crate

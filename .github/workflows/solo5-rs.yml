@@ -33,6 +33,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: solo5-rs
     steps:
     - name: Checkout Crate
       uses: actions/checkout@v3
