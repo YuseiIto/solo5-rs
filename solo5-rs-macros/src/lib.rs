@@ -39,8 +39,7 @@ pub fn main(_attr: TokenStream, item: TokenStream) -> TokenStream {
                     colon_token: _,
                     ty: box Type::Path(TypePath { qself: _, path }),
                 }) => {
-                    if *path.get_ident().unwrap()
-                        == Ident::new("Solo5StartInfo", Span::call_site())
+                    if *path.get_ident().unwrap() == Ident::new("Solo5StartInfo", Span::call_site())
                     {
                         quote! {
                             solo5_rs::Solo5StartInfo::from(start)
