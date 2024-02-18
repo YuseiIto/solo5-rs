@@ -10,7 +10,7 @@ pub fn puts(s: &str) {
 }
 
 pub fn put_num(v: u64, radix: u32, least_len: usize) {
-    let mut s = [0 as u8; 64];
+    let mut s = [0_u8; 64];
     let required_len = match v {
         0 => 0,
         _ => v.ilog(radix as u64) as usize,
@@ -33,7 +33,8 @@ pub fn put_num(v: u64, radix: u32, least_len: usize) {
 pub struct Console;
 impl Write for Console {
     fn write_str(&mut self, s: &str) -> Result<(), Error> {
-        Ok(puts(&s))
+        puts(s);
+        Ok(())
     }
 }
 

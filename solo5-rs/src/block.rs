@@ -14,7 +14,7 @@ pub struct BlockDevice {
 
 impl BlockDevice {
     pub fn acquire(name: &str) -> Result<Self, Solo5Error> {
-        let mut handle = 0 as u64;
+        let mut handle = 0_u64;
         let mut info = solo5_block_info {
             capacity: 1212,
             block_size: 1212,
@@ -60,7 +60,7 @@ impl BlockDevice {
         let write_result = unsafe {
             solo5_sys::solo5_block_write(
                 self.handle,
-                pos_offset as u64,
+                pos_offset,
                 bytes.as_ptr(),
                 bytes.len() as u64,
             )

@@ -44,8 +44,8 @@ impl<T> Solo5Result<T> {
     }
 }
 
-impl<T> Into<Result<T, Solo5Error>> for Solo5Result<T> {
-    fn into(self) -> Result<T, Solo5Error> {
-        self.0
+impl<T> From<Solo5Result<T>> for Result<T, Solo5Error> {
+    fn from(val: Solo5Result<T>) -> Self {
+        val.0
     }
 }
