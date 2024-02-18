@@ -1,8 +1,6 @@
 # Solo5-rs
 
-Build Unikernel faster, easier in Rust.
-
----
+**Build Unikernel faster, easier in Rust.**
 
 Solo5-rs is a framework for implementing Unikernel in Rust using Solo5.
 Solo5-rs provides a basic Unikernel framework using solo5 and a set of convenience functions, including a protocol stack.
