@@ -11,9 +11,12 @@ Solo5-rs provides a basic Unikernel framework using solo5 and a set of convenien
 - [License](#license)
 - [Contribution](#contribution)
 
+### Requirements
+- **Nightly** Rust toolchain with Cargo (`x86_64-unknown-none`)
+
 ## Getting Started
 
-// TODO
+Start from the [solo5-ts-template](https://github.com/YuseiIto/solo5-rs-template/blob/main/README)
 
 ## License
 
